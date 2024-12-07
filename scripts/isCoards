@@ -1,26 +1,9 @@
 #!/usr/bin/perl -w
 
-#------------------------------------------------------------------------------
-#                  GEOS-Chem Global Chemical Transport Model                  !
-#------------------------------------------------------------------------------
-#BOP
-#
-# !MODULE: isCoards
-#
-# !DESCRIPTION: Scans output of "ncdump" to determine if a netCDF file
-#  adheres to the COARDS conventions.
-#\\
-#\\
-# !USES:
-#
  require 5.003;     # Need this version of Perl or newer
  use English;       # Use English language
  use Carp;          # Get detailed error messages
- use strict;        # Explicitly declare all variables
-#
-# !PUBLIC DATA MEMBERS:
-#
- # Scalars
+ use strict;        # Explicitly declare all variable
  our $zFound        = 0;
 
  # Strings
@@ -36,15 +19,11 @@
  our $sep           = '->';
  our $times         = "";
  our $title         = "";
-
- # Arrays
  our @dims          = ();
  our @vars          = ();
  our @GOOD          = ();
  our @BAD           = ();
  our @OPT           = ();
-
- # Hashes
  our %add_offset    = ();
  our %axis          = ();
  our %calendar      = ();
@@ -57,61 +36,11 @@
  our %units         = ();
  our %varDims       = ();
 #
-# !PUBLIC MEMBER FUNCTIONS:
-#  &main()            : Driver function
-#
-# !PRIVATE MEMBER FUNCTIONS:
-#  &isMonotonic($)     : Checks index variables for monotonicity
-#  &isFirstValueZero($): Checks if the first time point is zero (GCHP req)
-#  &analyzeTime($)     : Checks the "time" variable for COARDS compliance
-#  &analyzeILev($)      : Checks the "lev" variable for COARDS compliance
-#  &analyzeLev($)      : Checks the "lev" variable for COARDS compliance
-#  &analyzeLat($)      : Checks the "lat" variable for COARDS compliance
-#  &analyzeLon($)      : Checks the "lon" variable for COARDS compliance
-#  &analyzeVar($)      : Checks each netCDF" variable for COARDS compliance
-#  &analyzeGlobAtts()  : Checks netCDF global attributes for COARDS compliance
-#  &analyzeResults()   : Calls the &analyze* routines and prints results
-#  &parseFile($)       : Calls ncdump and parses the output into Perl variables
-#
-# !REMARKS:
-#  (1) Assumes a version of "ncdump" is installed on your system.
-#  (2) isCoards may have some limitations.  We have written this primarily
-#       to check COARDS compliance for netCDF files that will be read
-#       by the HEMCO emissions component (part of GEOS-Chem).
-#EOC
-#------------------------------------------------------------------------------
-#                  GEOS-Chem Global Chemical Transport Model                  !
-#------------------------------------------------------------------------------
-#BOP
-#
-# !IROUTINE: isMonotonic
-#
-# !DESCRIPTION: Checks a list of values to make sure that it is monotonically
-#  increasing.  If it is monotonically increasing, it will return a value
-#  of 0 (success).  If not, it will return a value of -1 (failure).
-#\\
-#\\
-# !INTERFACE:
-#
 sub isMonotonic($) {
-#
-# !INPUT PARAMETERS:
-#
-  # Comma-separated list of values
   my ( $list ) = @_;
-#
-# !RETURN VALUE:
-#
-  # String to indicate return status
+
   my $result = "";
-#
-#EOP
-#------------------------------------------------------------------------------
-#BOC
-#
-# !LOCAL VARIABLES:
-#
-  # Scalars
+
   my $diff      = 0;
   my $direction = 0;
 
@@ -148,21 +77,9 @@ sub isMonotonic($) {
   if   ( $direction ==  1 ) { return( "is monotonically increasing" ); }
   else                      { return( "is monotonically decreasing" ); }
 }
-#------------------------------------------------------------------------------
-#                  GEOS-Chem Global Chemical Transport Model                  !
-#------------------------------------------------------------------------------
-#BOP
-#
-# !IROUTINE: isFirstValueZero
-#
-# !DESCRIPTION: Checks to see if the first value in a list is zero
-#\\
-#\\
-# !INTERFACE:
-#
-sub isFirstValueZero($) {
-#
-# !INPUT PARAMETERS:
+
+sub isFirstValueZero($#
+# !INPUT PARAM
 #
   # Comma-separated list of values
   my ( $list ) = @_;
@@ -185,20 +102,7 @@ sub isFirstValueZero($) {
   if ( $result[0] == "0" ) { return "[0] = 0 (requirement for GCHP)" }
   else                     { return "[0] != 0 (problem for GCHP)"    }
 }
-#EOC
-#------------------------------------------------------------------------------
-#                  GEOS-Chem Global Chemical Transport Model                  !
-#------------------------------------------------------------------------------
-#BOP
-#
-# !IROUTINE: analyzeTime
-#
-# !DESCRIPTION: Checks the attributes of the time variable to see if
-#  they adhere to the COARDS standard.
-#\\
-#\\
-# !INTERFACE:
-#
+
 sub analyzeTime($) {
 #
 # !INPUT PARAMETERS:
@@ -329,20 +233,7 @@ sub analyzeTime($) {
   # Return w/ error code
   return( $? );
 }
-#EOC
-#------------------------------------------------------------------------------
-#                  GEOS-Chem Global Chemical Transport Model                  !
-#------------------------------------------------------------------------------
-#BOP
-#
-# !IROUTINE: analyzeILev
-#
-# !DESCRIPTION: Checks the attributes of the lev variable to see if
-#  they adhere to the COARDS standard.
-#\\
-#\\
-# !INTERFACE:
-#
+
 sub analyzeILev($) {
 #
 # !INPUT PARAMETERS:
@@ -462,20 +353,7 @@ sub analyzeILev($) {
   # Return w/ error code
   return( $? );
 }
-#EOC
-#------------------------------------------------------------------------------
-#                  GEOS-Chem Global Chemical Transport Model                  !
-#------------------------------------------------------------------------------
-#BOP
-#
-# !IROUTINE: analyzeLev
-#
-# !DESCRIPTION: Checks the attributes of the lev variable to see if
-#  they adhere to the COARDS standard.
-#\\
-#\\
-# !INTERFACE:
-#
+
 sub analyzeLev($) {
 #
 # !INPUT PARAMETERS:
@@ -595,19 +473,7 @@ sub analyzeLev($) {
   # Return w/ error code
   return( $? );
 }
-#EOC
-#------------------------------------------------------------------------------
-#                  GEOS-Chem Global Chemical Transport Model                  !
-#------------------------------------------------------------------------------
-#BOP
 #
-# !IROUTINE: analyzeLat
-#
-# !DESCRIPTION: Checks the attributes of the lat variable to see if
-#  they adhere to the COARDS standard.
-#\\
-#\\
-# !INTERFACE:
 #
 sub analyzeLat($) {
 #
@@ -698,19 +564,7 @@ sub analyzeLat($) {
   # Return w/ error code
   return( $? );
 }
-#EOC
-#------------------------------------------------------------------------------
-#                  GEOS-Chem Global Chemical Transport Model                  !
-#------------------------------------------------------------------------------
-#BOP
 #
-# !IROUTINE: analyzeLon
-#
-# !DESCRIPTION: Checks the attributes of the lat variable to see if
-#  they adhere to the COARDS standard.
-#\\
-#\\
-# !INTERFACE:
 #
 sub analyzeLon($) {
 #
@@ -801,19 +655,6 @@ sub analyzeLon($) {
   # Return w/ error code
   return( $? );
 }
-#EOC
-#------------------------------------------------------------------------------
-#                  GEOS-Chem Global Chemical Transport Model                  !
-#------------------------------------------------------------------------------
-#BOP
-#
-# !IROUTINE: analyzeVar
-#
-# !DESCRIPTION: Checks the attributes of a (non-index) netCDF variable
-#  to see if they adhere to the COARDS standard.
-#\\
-#\\
-# !INTERFACE:
 #
 sub analyzeVar($) {
 #
@@ -955,19 +796,7 @@ sub analyzeVar($) {
   # Return with error code
   return( $? );
 }
-#EOC
-#------------------------------------------------------------------------------
-#                  GEOS-Chem Global Chemical Transport Model                  !
-#------------------------------------------------------------------------------
-#BOP
 #
-# !IROUTINE: analyzeGlobAtts
-#
-# !DESCRIPTION: Checks if the global attributes of a netCDF file adhere
-#  to the COARDS standard.
-#\\
-#\\
-# !INTERFACE:
 #
 sub analyzeGlobAtts() {
 #
@@ -1036,19 +865,7 @@ sub analyzeGlobAtts() {
   # Return with error code
   return( $? );
 }
-#EOP
-#------------------------------------------------------------------------------
-#                  GEOS-Chem Global Chemical Transport Model                  !
-#------------------------------------------------------------------------------
-#BOP
 #
-# !IROUTINE: analyzeResults
-#
-# !DESCRIPTION: Calls routines to analyze if the given netCDF file
-#  is COARDS-compliant.  Prints results to stdout.
-#\\
-#\\
-# !INTERFACE:
 #
 sub analyzeResults() {
 #
@@ -1189,8 +1006,7 @@ printResults:
 #  variables for later analysis.
 #\\
 #\\
-# !INTERFACE:
-#
+# !
 sub parseFile($) {
 #
 # !INPUT PARAMETERS:
